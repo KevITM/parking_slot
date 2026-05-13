@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstring>
+#include <random>
 
 #ifdef _WIN32
   #include <winsock2.h>
@@ -33,7 +34,8 @@ string generate_plate() {
 }
 
 int main(int argc, char* argv[]) {
-    srand(time(0));
+    std::random_device rd;
+    srand(rd());
     string server_ip = "127.0.0.1";
     int port = 8080;
 
