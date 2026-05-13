@@ -1,0 +1,22 @@
+# CMake and build directories
+build/
+bin/
+*.obj
+*.lib
+*.dll
+*.exp
+*.exe
+*.so
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+*.bat
