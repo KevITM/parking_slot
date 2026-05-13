@@ -14,6 +14,7 @@
   #include <sys/socket.h>
   #include <arpa/inet.h>
   #include <unistd.h>
+  #include <netdb.h>
   #define SOCKET int
   #define INVALID_SOCKET -1
   #define SOCKET_ERROR -1
@@ -53,14 +54,17 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    sockaddr_in serv_addr;
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(port);
-
-    if (inet_pton(AF_INET, server_ip.c_str(), &serv_addr.sin_addr) <= 0) {
-        cerr << "Invalid address/ Address not supported" << endl;
+    struct hostent *server_host = gethostbyname(server_ip.c_str());
+    if (server_host == NULL) {
+        cerr << "No such host: " << server_ip << endl;
         return 1;
     }
+
+    sockaddr_in serv_addr;
+    memset(&serv_addr, 0, sizeof(serv_addr));
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(port);
+    memcpy(&serv_addr.sin_addr.s_addr, server_host->h_addr, server_host->h_length);
 
     while (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
         cout << "Connection Failed. Retrying in 2 seconds..." << endl;
